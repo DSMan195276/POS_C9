@@ -1,18 +1,27 @@
 #include <paging.h>
 
+
+__attribute__((__align__(4096))) /* Page align the array */
+static u32int kernel_directory[1024];
+
+__attribute__((__align__(4096)))
+static u32int kernel_page_table[1024];
+
 u32int *page_directory;
 u32int *first_page_table;
 
 void paging_initialize()
 {
 	// create a page directory
-	page_directory = (u32int *) allocate_block();
+	/* page_directory = (u32int *) allocate_block(); */
+    page_directory = kernel_directory;
 	
 	// clear the 4kb that the page directory occupies
 	memset((u8int *) page_directory, 0, 4096);
 	
 	// create a page table
-	first_page_table = (u32int *) allocate_block();
+	/* first_page_table = (u32int *) allocate_block(); */
+    first_page_table = kernel_page_table;
 	
 	// clear the 4kb that the page tables occupies
 	memset((u8int *) first_page_table, 0, 4096);
